@@ -44,15 +44,7 @@ public class AppController extends Application {
         try {
             replaceSceneContent("../layouts/chat.fxml");
             ChatController.getInstance().updateUserList();
-//            ChatController.getInstance().userList.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//                @Override
-//                public void handle(MouseEvent mouseEvent) {
-//                    if (mouseEvent.getClickCount() > 1) {
-//                        Node node = ((ListCellSkin) mouseEvent.getTarget());
-//                        System.out.println("node = " + node);
-//                    }
-//                }
-//            });
+        //TODO:From here
         } catch (Exception e) {
             e.printStackTrace();
         }

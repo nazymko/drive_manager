@@ -14,6 +14,7 @@ import rt.core.Session;
 import rt.core.Urls;
 import rt.models.Human;
 import rt.util.IO;
+import rt.util.UI;
 
 import java.io.InputStream;
 
@@ -37,9 +38,6 @@ public class InboxChecker extends Task {
 
             try {
                 for (Element element : select) {
-//                    String name = element.select("td.left-box.pull-left div.pull-left a").first().text();
-//                    String href = element.select("td").get(1).select("a").first().attr("href");
-
                     String name = element.select("td.left-box.pull-left div.pull-left a").first().text();
 
                     String href = element.select("td").get(1).select("a").first().attr("href");
@@ -63,7 +61,12 @@ public class InboxChecker extends Task {
             }
         }
         EntityUtils.consume(response.getEntity());
-        AppController.getInstance().stageChat();
+        UI.runIt(new Runnable() {
+            @Override
+            public void run() {
+                AppController.getInstance().stageChat();
+            }
+        });
         System.out.println("Inbox ended");
         return true;
     }

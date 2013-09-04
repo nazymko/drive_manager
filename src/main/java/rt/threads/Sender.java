@@ -39,7 +39,6 @@ public class Sender extends Task {
         try {
             HttpResponse response = Session.getClient().execute(httpPost);
             EntityUtils.consume(response.getEntity());
-
             new Thread(new InboxChecker()).start();
         } catch (Exception e) {
             e.printStackTrace();
