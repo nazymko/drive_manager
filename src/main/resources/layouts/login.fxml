@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1"
-            xmlns="http://javafx.com/javafx/2.2" fx:controller="rt.Controller">
-    <children>
-        <AnchorPane id="AnchorPane" layoutX="374.0" layoutY="291.0">
-            <children>
-                <TextField id="login" fx:id="login" prefWidth="200.0"/>
-                <TextField id="password" fx:id="password" layoutY="44.0" prefWidth="200.0"/>
-            </children>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="rt.controllers.LoginController">
+  <children>
+    <AnchorPane id="AnchorPane" layoutX="374.0" layoutY="291.0">
+      <children>
+        <PasswordField fx:id="password" layoutX="0.0" layoutY="39.0" prefWidth="200.0" text="19902105" />
+        <AnchorPane id="AnchorPane" layoutX="0.0" layoutY="0.0">
+          <children>
+            <TextField fx:id="login" prefWidth="200.0" text="nazymko" />
+          </children>
         </AnchorPane>
-        <Button layoutX="374.0" layoutY="365.0" mnemonicParsing="false" onAction="#auth2" text="Login"/>
-        <TextArea fx:id="textArea" layoutX="14.0" layoutY="14.0" prefWidth="200.0" wrapText="true"/>
-        <CheckBox fx:id="checkbox" layoutX="474.0" layoutY="368.0" mnemonicParsing="false" onAction="#changeState"
-                  text="CheckBox"/>
-    </children>
+      </children>
+    </AnchorPane>
+    <Button layoutX="374.0" layoutY="365.0" mnemonicParsing="false" onAction="#auth2" text="Login" />
+    <CheckBox fx:id="checkbox" layoutX="474.0" layoutY="368.0" mnemonicParsing="false" onAction="#changeState" text="CheckBox" />
+  </children>
 </AnchorPane>
