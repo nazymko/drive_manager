@@ -23,13 +23,13 @@
                 </Tab>
               </tabs>
             </TabPane>
-            <TextField fx:id="sendField" alignment="TOP_LEFT" layoutX="0.0" layoutY="332.0" prefHeight="65.99990000000253" prefWidth="401.0" promptText=":)" text="" />
             <Button layoutX="400.0" layoutY="333.0" mnemonicParsing="false" onAction="#sendMessage" prefHeight="66.0" prefWidth="74.0" text="Send" />
+            <TextArea fx:id="sendField" cache="true" cacheHint="SPEED" depthTest="INHERIT" layoutX="0.0" layoutY="332.0" onKeyPressed="#onInputEnter" prefHeight="66.0" prefRowCount="10" prefWidth="399.9999000000025" text="" wrapText="false" />
           </children>
         </AnchorPane>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
           <children>
-            <ListView fx:id="userList" onContextMenuRequested="#userInfoRequesr" onMouseClicked="#mouseClicked" prefHeight="398.0" prefWidth="118.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <ListView fx:id="userList" onContextMenuRequested="#userInfoRequest" onMouseClicked="#mouseClicked" prefHeight="398.0" prefWidth="118.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
           </children>
         </AnchorPane>
       </items>

@@ -14,10 +14,11 @@ public class Session {
     public static List activeChats = new ArrayList();
     static Map<String, String> sessionStorage = new HashMap<String, String>();
     static HttpClient client = new DefaultHttpClient();
-    static List<Human> senders = new ArrayList<Human>();
+    static List<Human> contacts = new ArrayList<Human>();
     static Map<Integer, List<Message>> history = new HashMap<Integer, List<Message>>();
     static boolean authorized = false;
     static WeakHashMap<Integer, Human> weakSenders = new WeakHashMap<Integer, Human>();
+    private static boolean shutdown;
 
     public static List<Message> getHistory(Integer id) {
         List<Message> messages;
@@ -30,8 +31,8 @@ public class Session {
         return messages;
     }
 
-    public static List<Human> getSenders() {
-        return senders;
+    public static List<Human> getContacts() {
+        return contacts;
     }
 
     public static Map<String, String> session() {
@@ -51,11 +52,20 @@ public class Session {
     }
 
     public static void addUniqueSender(Human human) {
-        if (!senders.contains(human)) {
-            senders.add(human);
-            weakSenders.put(human.getId(), human);
-        }
+        if (weakSenders.containsKey(human.getId())) {
+            contacts.remove(weakSenders.get(human.getId()));
+            weakSenders.remove(human.getId());
+            //AddNew
+            addContact(human);
 
+        } else {
+            addContact(human);
+        }
+    }
+
+    private static void addContact(Human human) {
+        contacts.add(human);
+        weakSenders.put(human.getId(), human);
     }
 
 //    public static WeakHashMap<Integer, Human> getWeakSenders() {
@@ -72,5 +82,13 @@ public class Session {
 
     public static Human getContactById(int id) {
         return weakSenders.get(id);
+    }
+
+    public static void setShutdown(boolean shutdown) {
+        Session.shutdown = shutdown;
+    }
+
+    public static boolean isShutdown() {
+        return shutdown;
     }
 }

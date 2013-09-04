@@ -28,22 +28,24 @@ public class Sender extends Task {
 
     @Override
     protected Object call() throws Exception {
-        System.out.println("Sender start");
         HttpPost httpPost = new HttpPost(Urls.replyTo + id);
 
         List<NameValuePair> params = new ArrayList<NameValuePair>(1);
         params.add(new BasicNameValuePair("PersonalMessage[text]", text));
         httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 
-        System.out.println("Before execute");
         try {
-            HttpResponse response = Session.getClient().execute(httpPost);
-            EntityUtils.consume(response.getEntity());
+            synchronized (Session.getClient()) {
+                HttpResponse response = Session.getClient().execute(httpPost);
+             /*Important block*/
+                EntityUtils.consume(response.getEntity());
+            /*Important block*/
+            }
             new Thread(new InboxChecker()).start();
+            new Thread(new MailLoader(id)).start();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("Sender end");
 
         return true;
     }

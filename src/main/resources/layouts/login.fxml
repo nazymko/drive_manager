@@ -9,10 +9,10 @@
   <children>
     <AnchorPane id="AnchorPane" layoutX="374.0" layoutY="291.0">
       <children>
-        <PasswordField fx:id="password" layoutX="0.0" layoutY="39.0" prefWidth="200.0" text="19902105" />
+        <PasswordField fx:id="password" layoutX="0.0" layoutY="39.0" prefWidth="200.0" promptText="password" text="" />
         <AnchorPane id="AnchorPane" layoutX="0.0" layoutY="0.0">
           <children>
-            <TextField fx:id="login" prefWidth="200.0" text="nazymko" />
+            <TextField fx:id="login" prefWidth="200.0" promptText="login" text="" />
           </children>
         </AnchorPane>
       </children>

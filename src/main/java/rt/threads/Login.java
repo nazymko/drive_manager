@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import rt.core.Session;
+import rt.threads.daemons.DInboxChecker;
 import rt.threads.daemons.usedbydemons.InboxChecker;
 
 import java.io.IOException;
@@ -35,33 +36,36 @@ public class Login extends Task {
     @Override
     protected Object call() throws Exception {
         try {
+            synchronized (Session.getClient()) {
+                HttpClient httpclient = Session.getClient();
+                HttpPost httppost = new HttpPost("http://teamfinding.com/");
 
-            System.out.println("Started");
-            HttpClient httpclient = Session.getClient();
-            HttpPost httppost = new HttpPost("http://teamfinding.com/");
-
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-            params.add(new BasicNameValuePair("User[login]", login));
-            params.add(new BasicNameValuePair("User[password]", passwordText));
-            httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+                List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+                params.add(new BasicNameValuePair("User[login]", login));
+                params.add(new BasicNameValuePair("User[password]", passwordText));
+                httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
 
 
-            HttpResponse response = httpclient.execute(httppost);
-            int code = response.getStatusLine().getStatusCode();
-            if (code == 302) {
-                System.out.println("Good credentials! We are IN");
-            } else {
-                System.out.println("WTF, Who are you - GET OF!!");
-            }
-            Header[] headers = response.getHeaders("Set-Cookie");
-
-            for (Header header : headers) {
-                HeaderElement[] elements1 = header.getElements();
-                for (HeaderElement headerElement : elements1) {
-                    Session.session().put(headerElement.getName(), headerElement.getValue());
+                HttpResponse response = httpclient.execute(httppost);
+                int code = response.getStatusLine().getStatusCode();
+                if (code == 302) {
+                    System.out.println("Good credentials! We are IN");
+                    new Thread(new DInboxChecker()).start();
+                } else {
+                    System.out.println("WTF, Who are you - GET OF!!");
                 }
+                Header[] headers = response.getHeaders("Set-Cookie");
+
+                for (Header header : headers) {
+                    HeaderElement[] elements1 = header.getElements();
+                    for (HeaderElement headerElement : elements1) {
+                        Session.session().put(headerElement.getName(), headerElement.getValue());
+                    }
+                }
+                     /*Important block*/
+                EntityUtils.consume(response.getEntity());
+                    /*Important block*/
             }
-            EntityUtils.consume(response.getEntity());
             new Thread(new InboxChecker()).start();
             Session.setAuthorized(true);
             return true;

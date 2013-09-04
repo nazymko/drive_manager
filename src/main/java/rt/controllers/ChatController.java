@@ -5,8 +5,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import rt.core.Session;
 import rt.models.Human;
@@ -22,7 +23,7 @@ import java.util.List;
  */
 public class ChatController {
     static ChatController instance;
-    public TextField sendField;
+    public TextArea sendField;
     public ListView userList;
     public TextArea chattingField;
     public Tab contactName;
@@ -41,26 +42,35 @@ public class ChatController {
     @FXML
     public void sendMessage(ActionEvent actionEvent) {
         updateUserList();
-        int id = 861;
-        new Thread(new Sender(sendField.getText(), id)).start();
+        if (currentUserId != 0) {
+            new Thread(new Sender(sendField.getText(), currentUserId)).start();
+        } else {
+            chatTable.appendText("Select contact from list in right.\n");
+        }
+        sendField.clear();
+
     }
 
     public void updateUserList() {
-        List<Human> senders = Session.getSenders();
+        List<Human> senders = Session.getContacts();
         userList.getItems().clear();
         for (Human sender : senders) {
-//            if (!userList.getItems().contains(sender)) {
             userList.getItems().add(sender);
-//            } else {
-//                System.out.println("sender = " + sender + " exist in list");
-//            }
         }
-//        userList.getItems().retainAll(senders);
-//        userList.getItems().
+
+        checkChatTable(currentUserId);
+    }
+
+    private void checkChatTable(int currentUserId) {
+        Human contactById = Session.getContactById(currentUserId);
+        if (contactById != null && contactById.getUnread() > 0) {
+            new Thread(new MailLoader(currentUserId)).start();
+        }
+
     }
 
     @FXML
-    public void userInfoRequesr(ContextMenuEvent arg0) {
+    public void userInfoRequest(ContextMenuEvent arg0) {
     }
 
     @FXML
@@ -74,7 +84,7 @@ public class ChatController {
     }
 
     private void setupChatWihId(Integer id) {
-        Session.getSenders();
+        Session.getContacts();
         if (!Session.activeChats.contains(id)) {
             if (currentUserId != id) {
                 new Thread(new MailLoader(id)).start();
@@ -107,5 +117,11 @@ public class ChatController {
         Session.getContactById(id).setUnread(0);
         updateUserList();
 
+    }
+
+    public void onInputEnter(KeyEvent key) {
+        if (key.getCode() == KeyCode.ENTER && key.isControlDown()) {
+            sendMessage(null);
+        }
     }
 }

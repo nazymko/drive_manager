@@ -33,18 +33,21 @@ public class MailLoader extends Task {
     @Override
     public Object call() throws Exception {
         try {
-            HttpClient httpclient = Session.getClient();
-            System.out.println("MailLoader started");
-            HttpGet httpGet = new HttpGet(Urls.inboxMessages + id);
 
-            HttpResponse response = null;
+            String contentData;
+            synchronized (Session.getClient()) {
+                HttpClient httpclient = Session.getClient();
+                HttpGet httpGet = new HttpGet(Urls.inboxMessages + id);
 
-            response = httpclient.execute(httpGet);
-            InputStream content = response.getEntity().getContent();
-            String contentData = IO.readStream(content);
+                HttpResponse response = null;
+
+                response = httpclient.execute(httpGet);
+                InputStream content = response.getEntity().getContent();
+                contentData = IO.readStream(content);
             /*Important block*/
-            EntityUtils.consume(response.getEntity());
+                EntityUtils.consume(response.getEntity());
             /*Important block*/
+            }
 
             Document parse = Jsoup.parse(contentData);
             {
@@ -60,13 +63,6 @@ public class MailLoader extends Task {
                         history.add(message);
                     }
                 }
-
-
-                List<Message> history1 = Session.getHistory(id);
-                for (Message message : history1) {
-                    System.out.println("message = " + message);
-                }
-
             }
             UI.runIt(new Runnable() {
                 @Override
@@ -75,7 +71,6 @@ public class MailLoader extends Task {
                     ChatController.getInstance().updateContactListUnreadMessages(id);
                 }
             });
-            System.out.println("MailLoader ended");
         } catch (Exception e) {
             e.printStackTrace();
         }
